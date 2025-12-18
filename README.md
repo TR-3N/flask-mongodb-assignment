@@ -521,4 +521,12 @@ kubectl get hpa flask-app-hpa -w
 kubectl get pods -w
 ```
 
-Under sustained load, the HPA scales the Flask Deployment up; once load stops, it scales back down.
+During testing, the HPA remained at the minimum replica count (2) even under sustained load.
+The HPA status showed `cpu: <unknown>/70%`, indicating that CPU metrics were not available.
+
+This typically occurs when the Kubernetes Metrics Server is not enabled or is not providing metrics.
+As a result, the HPA could not evaluate CPU utilisation and therefore did not scale the Deployment.
+
+Despite this, the HPA configuration itself (min/max replicas, CPU target) was correct and
+actively monitoring the Deployment.
+
