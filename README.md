@@ -530,3 +530,23 @@ As a result, the HPA could not evaluate CPU utilisation and therefore did not sc
 Despite this, the HPA configuration itself (min/max replicas, CPU target) was correct and
 actively monitoring the Deployment.
 
+## Autoscaling Test Results (HPA)
+
+### Load Generation
+The following screenshot shows continuous HTTP requests being sent to the Flask service to simulate load:
+
+![Autoscaling Load](screenshots/autoscaling-load.png)
+
+### HPA Status
+The HPA was correctly created and attached to the Flask Deployment. However, CPU metrics were unavailable, as indicated by `<unknown>/70%`:
+
+![HPA Status](screenshots/autoscaling-hpa.png)
+
+This typically occurs when the Kubernetes Metrics Server is not enabled or not reporting metrics. As a result, the HPA could not evaluate CPU utilization and did not trigger scaling.
+
+### Pod Status
+The following screenshot shows that the Flask pods remained stable at the minimum replica count during testing:
+
+![Pods Status](screenshots/autoscaling-pods.png)
+
+Despite the lack of scaling, this confirms that the Deployment, HPA configuration, and load testing setup were correct.
