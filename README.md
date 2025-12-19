@@ -527,14 +527,14 @@ kubectl get pods -w
 #### Load Generation
 Continuous requests were sent to the Flask service to simulate a sustained load:
 
-![Autoscaling Load](screenshots/autoscaling-load-v2.png)
+![Autoscaling Load](Screenshots/autoscaling-load-v2.png)
 
 #### HPA Metrics and Scaling
 After enabling the Kubernetes Metrics Server, the Horizontal Pod Autoscaler was able to
 retrieve CPU metrics successfully. The HPA continuously monitored CPU utilization
 against the 70% target:
 
-![HPA Status](screenshots/autoscaling-hpa-v2.png)
+![HPA Status](Screenshots/autoscaling-hpa-v2.png)
 
 During testing, CPU utilization remained below the scaling threshold (around 5–17%),
 so the number of replicas stayed at the minimum value of 2. This confirms that the HPA
