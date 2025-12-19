@@ -521,32 +521,24 @@ kubectl get hpa flask-app-hpa -w
 kubectl get pods -w
 ```
 
-During testing, the HPA remained at the minimum replica count (2) even under sustained load.
-The HPA status showed `cpu: <unknown>/70%`, indicating that CPU metrics were not available.
 
-This typically occurs when the Kubernetes Metrics Server is not enabled or is not providing metrics.
-As a result, the HPA could not evaluate CPU utilisation and therefore did not scale the Deployment.
+### 10.3 Autoscaling (HPA)
 
-Despite this, the HPA configuration itself (min/max replicas, CPU target) was correct and
-actively monitoring the Deployment.
+#### Load Generation
+Continuous requests were sent to the Flask service to simulate a sustained load:
 
-## Autoscaling Test Results (HPA)
+![Autoscaling Load](screenshots/autoscaling-load-v2.png)
 
-### Load Generation
-The following screenshot shows continuous HTTP requests being sent to the Flask service to simulate load:
+#### HPA Metrics and Scaling
+After enabling the Kubernetes Metrics Server, the Horizontal Pod Autoscaler was able to
+retrieve CPU metrics successfully. The HPA continuously monitored CPU utilization
+against the 70% target:
 
-![Autoscaling Load](Screenshots/autoscaling-load.png.png)
+![HPA Status](screenshots/autoscaling-hpa-v2.png)
 
-### HPA Status
-The HPA was correctly created and attached to the Flask Deployment. However, CPU metrics were unavailable, as indicated by `<unknown>/70%`:
+During testing, CPU utilization remained below the scaling threshold (around 5–17%),
+so the number of replicas stayed at the minimum value of 2. This confirms that the HPA
+was functioning correctly and making scaling decisions based on real CPU metrics.
 
-![HPA Status](Screenshots/autoscaling-hpa.png)
-
-This typically occurs when the Kubernetes Metrics Server is not enabled or not reporting metrics. As a result, the HPA was unable to evaluate CPU utilisation and therefore did not trigger scaling.
-
-### Pod Status
-The following screenshot shows that the Flask pods remained stable at the minimum replica count during testing:
-
-![Pods Status](Screenshots/autoscaling-pods.png)
-
-Despite the lack of scaling, this confirms that the Deployment, HPA configuration, and load testing setup were correct.
+If CPU utilization were to exceed the target for a sustained period, the HPA would scale
+the Deployment up to a maximum of 5 replicas as configured.
