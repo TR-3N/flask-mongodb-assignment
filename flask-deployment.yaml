@@ -37,3 +37,10 @@ spec:
               value: "flask_db"
             - name: MONGO_AUTH_DB
               value: "admin"
+          resources:
+            requests:
+              cpu: "0.2"
+              memory: "250Mi"
+            limits:
+              cpu: "0.5"
+              memory: "500Mi"
